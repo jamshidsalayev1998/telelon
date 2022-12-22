@@ -1,6 +1,14 @@
 <?php
 
 return [
+    /*
+    |-------------------------------------------
+    | Current API Version
+    |-------------------------------------------
+    | That is the default API version of your API (Last version).
+    | The idea is that if there is no version when calling the API, it  | will be used this one.
+    */
+    'api_latest' => '1',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +47,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -174,6 +182,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
 
     ],
 

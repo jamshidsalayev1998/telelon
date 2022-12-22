@@ -18,6 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/home';
+    protected $apiNamespace = 'App\Http\Controllers\Api';
 
     /**
      * The controller namespace for the application.
@@ -35,17 +36,38 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->configureRateLimiting();
+//        $this->configureRateLimiting();
 
-        $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
+//        $this->routes(function () {
+//            Route::prefix('api')
+//                ->middleware('api')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/api.php'));
+//
+//            Route::middleware('web')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/web.php'));
+//        });
+        Route::group([
+            'middleware' => ['api', 'api_version:v1'],
+            'namespace' => "{$this->apiNamespace}\V1",
+            'prefix' => 'api/v1',
+        ], function ($router) {
+            require base_path('routes/api_v1.php');
+        });
+        Route::group([
+            'middleware' => ['api', 'api_version:v2'],
+            'namespace' => "{$this->apiNamespace}\V2",
+            'prefix' => 'api/v2',
+        ], function ($router) {
+            require base_path('routes/api_v2.php');
+        });
+        Route::group([
+            'middleware' => ['web', 'api_version:v1'],
+            'namespace' => "{$this->apiNamespace}\V1",
+            'prefix' => 'v1',
+        ], function ($router) {
+            require base_path('routes/web_v1.php');
         });
     }
 
