@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\LoginRequest;
+use App\Http\Resources\UserPermissionsResource;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -43,24 +44,31 @@ class AuthController extends Controller
     {
 
         if (!Auth::attempt($loginRequest->all())) {
-            return $this->error('Credentials not match', 401);
+            return $this->error('Login yoki parol noto\'g\'ri', 401);
         }
         $user = auth()->user();
-        $data['user'] = auth()->user();
-        $data['token'] = $user->createToken('API Token')->plainTextToken;
-        $permissions = $user->getPermissionsViaRoles();
-        Arr::except($data['user'],['email' , 'email_verified_at' , 'updated_at' , 'created_at' , 'roles' , 'permissions']);
-        $data['user']['permissions'] = $permissions;
-        Arr::except($data['user']['permissions'],['guard_name']);
-        return $this->success($data,'Success');
+        $token = $user->createToken('API Token')->plainTextToken;
+        $response['response'] = array(
+            'token' => $token
+        );
+        return $this->success($response, 'Success');
     }
 
-    public function logout(): array
+    public function me()
+    {
+        $user = auth()->user();
+        $permission = $user->getAllPermissions();
+        $response['result'] = array(
+            'phone' => $user->login,
+            'name' => $user->name,
+            'permissions' => UserPermissionsResource::collection($permission)
+        );
+        return $this->success($response, 'Success');
+    }
+
+    public function logout(): \Illuminate\Http\JsonResponse
     {
         auth()->user()->tokens()->delete();
-
-        return [
-            'message' => 'Tokens Revoked'
-        ];
+        return $this->success([], 'Success', 200);
     }
 }
