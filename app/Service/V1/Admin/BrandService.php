@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Service\V1\Admin;
+
+use App\Models\Brand;
+use App\Service\FileSave;
+use App\Service\PaginationService;
+use Illuminate\Support\Facades\File;
+
+class BrandService
+{
+    public static function indexBrands($request): array
+    {
+        $departmentEloquent = Brand::notDeleted()
+            ->filter($request->filters)->relations($request->relations)->order($request->desc);
+        return PaginationService::makePagination($departmentEloquent, $request->limit);
+    }
+
+    public static function storeBrand($data): Brand
+    {
+        $newBrand = new Brand();
+        $newBrand->category_id = $data['category_id'];
+        $newBrand->name = $data['name'];
+        $newBrand->slug = $data['slug'];
+        if (key_exists('image', $data)) {
+            if ($data['image']) {
+                if (is_file($data['image'])) {
+                    $newBrand->image = FileSave::storeFile('brands', $data['image']);
+                }
+            }
+        }
+        $newBrand->save();
+        return $newBrand;
+    }
+
+    public static function updateBrand($brand, $data)
+    {
+        if (key_exists('status', $data)) {
+            $brand->status = $data['status'];
+        }
+        if (key_exists('image', $data)) {
+            if ($data['image']) {
+                if (is_file($data['image'])) {
+                    if (File::exists($brand->image)) {
+                        File::delete($brand->image);
+                    }
+                    $brand->image = FileSave::storeFile('brands', $data['image']);
+                }
+            }
+        }
+        if (key_exists('category_id' , $data))$brand->category_id = $data['category_id'];
+        if (key_exists('name' , $data))$brand->name = $data['name'];
+        if (key_exists('slug' , $data))$brand->slug = $data['slug'];
+        $brand->update();
+        return $brand;
+    }
+
+    public static function deleteBrand($brand)
+    {
+        $brand->is_deleted = 1;
+        $brand->update();
+        return $brand;
+    }
+}

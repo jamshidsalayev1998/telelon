@@ -47,5 +47,15 @@ return [
             'roles' => ['super-admin'],
             'login' => '994571669'
         ]
+    ],
+    'default-languages' => [
+        [
+            'name' => 'O`zbek',
+            'key' => 'uz'
+        ],
+        [
+            'name' => 'Rus',
+            'key' => 'ru'
+        ]
     ]
 ];

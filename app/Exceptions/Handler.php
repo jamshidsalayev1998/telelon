@@ -2,11 +2,21 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponser;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponser;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -34,8 +44,15 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (NotFoundHttpException $exception) {
+            return $this->error('Not found', 404, $exception->getMessage());
+        });
+         $this->renderable(function (RelationNotFoundException $exception) {
+            return $this->error('Not found', 404, $exception->getMessage());
+        });
         $this->reportable(function (Throwable $e) {
             //
         });
+
     }
 }

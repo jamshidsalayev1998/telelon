@@ -48,7 +48,7 @@ class AuthController extends Controller
         }
         $user = auth()->user();
         $token = $user->createToken('API Token')->plainTextToken;
-        $response['response'] = array(
+        $response['result'] = array(
             'token' => $token
         );
         return $this->success($response, 'Success');
