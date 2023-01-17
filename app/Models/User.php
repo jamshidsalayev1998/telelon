@@ -12,6 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property mixed $phone
  * @method static create(array $array)
+ * @method static where(string $string, mixed $login)
  */
 class User extends Authenticatable
 {

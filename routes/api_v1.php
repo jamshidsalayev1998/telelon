@@ -22,7 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/auth/check', [AuthController::class, 'check']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+Route::group(['prefix' => 'admin'], function () {
+    Route::post('auth/login', [AuthController::class, 'loginAdmin']);
+});
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/resend', [AuthController::class, 'resend']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);

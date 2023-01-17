@@ -3,18 +3,20 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @property mixed $login
+ * @property mixed $code
  */
-class AuthNumberCheckRequest extends FormRequest
+class UserLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -24,10 +26,11 @@ class AuthNumberCheckRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'login' => ['required' , 'max:9' , 'min:9']
+            'login' => ['required' , Rule::exists('users' , 'login')],
+            'code' => ['required' , 'string']
         ];
     }
 }
