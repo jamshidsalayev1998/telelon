@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthNumberCheckRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\UserPermissionsResource;
 use App\Models\User;
+use App\Service\V1\Auth\GeneratePasswordService;
+use App\Service\V1\Auth\SendPasswordToUserService;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Middleware\RateLimited;
@@ -22,23 +25,19 @@ class AuthController extends Controller
         return 'login';
     }
 
-    public function register(Request $request): \Illuminate\Http\JsonResponse
+    public function register(RegisterRequest $registerRequest): \Illuminate\Http\JsonResponse
     {
-        $attr = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed'
-        ]);
-
+        $attr = $registerRequest->all();
+        $password = GeneratePasswordService::generateUserPassword();
         $user = User::create([
             'name' => $attr['name'],
-            'password' => bcrypt($attr['password']),
-            'email' => $attr['email']
+            'login' => $attr['login'],
         ]);
-
-        return $this->success([
-            'token' => $user->createToken('API Token')->plainTextToken
-        ]);
+        SendPasswordToUserService::sendPasswordToUser($password, $registerRequest->login, $user->id);
+        $response['result'] = array(
+            'created' => true
+        );
+        return $this->success($response, 'Success');
     }
 
     public function login(LoginRequest $loginRequest): \Illuminate\Http\JsonResponse
@@ -50,7 +49,7 @@ class AuthController extends Controller
         $user = auth()->user();
         $token = $user->createToken('API Token')->plainTextToken;
         $response['result'] = array(
-            'token' => $token
+            'created' => $token
         );
         return $this->success($response, 'Success');
     }
@@ -75,6 +74,9 @@ class AuthController extends Controller
 
     public function check(AuthNumberCheckRequest $authNumberCheckRequest)
     {
-        
+        $response['result'] = array(
+            'code' => User::where('login', $authNumberCheckRequest->login)->exists() ? 200 : 404
+        );
+        return $this->success($response, 'Success');
     }
 }

@@ -3,8 +3,12 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class AuthNumberCheckRequest extends FormRequest
+/**
+ * @property mixed login
+ */
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +28,8 @@ class AuthNumberCheckRequest extends FormRequest
     public function rules()
     {
         return [
-            'login' => ['required' , 'max:9' , 'min:9']
+            'name' => ['required' , 'min:3' , 'max:60'],
+            'login' => ['required' , Rule::unique('users' , 'login')]
         ];
     }
 }
