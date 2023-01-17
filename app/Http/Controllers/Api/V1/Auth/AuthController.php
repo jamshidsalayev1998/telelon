@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AuthNumberCheckRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\UserPermissionsResource;
 use App\Models\User;
@@ -70,5 +71,10 @@ class AuthController extends Controller
     {
         auth()->user()->tokens()->delete();
         return $this->success([], 'Success', 200);
+    }
+
+    public function check(AuthNumberCheckRequest $authNumberCheckRequest)
+    {
+        
     }
 }
