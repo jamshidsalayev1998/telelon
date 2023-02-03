@@ -29,7 +29,7 @@ class StoreCategoryRequest extends FormRequest
             'name.uz' => ['required', 'string'],
             'name.ru' => ['required', 'string'],
             'slug' => ['required', Rule::unique('categories', 'slug')->where('is_deleted', 0)],
-            'image' => ['required' , 'image' , 'mimes:jpeg,png,jpg']
+            'image' => ['required' , 'image' , 'mimes:jpeg,png,jpg,svg,webp']
         ];
     }
 }

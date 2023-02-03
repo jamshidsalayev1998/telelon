@@ -27,7 +27,7 @@ class StoreBrandRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:25'],
             'slug' => ['required', Rule::unique('brands', 'slug')->where('is_deleted', 0)],
-            'image' => ['image', 'mimes:jpeg,png,jpg'],
+            'image' => ['image', 'mimes:jpeg,png,jpg,svg,webp'],
             'category_id' => ['required', Rule::exists('categories', 'id')->where('is_deleted', 0)]
         ];
     }

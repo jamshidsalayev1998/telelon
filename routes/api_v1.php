@@ -31,15 +31,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::group(['prefix' => 'admin'], function () {
-        Route::get('/category', [CategoryController::class, 'index']);
-        Route::post('/category', [CategoryController::class, 'store']);
-        Route::post('/category-update/{category}', [CategoryController::class, 'update']);
-        Route::delete('/category/{category}', [CategoryController::class, 'destroy']);
+        Route::get('/category', [CategoryController::class, 'index'])->middleware('permission:category-index');
+        Route::post('/category', [CategoryController::class, 'store'])->middleware('permission:category-store');
+        Route::post('/category-update/{category}', [CategoryController::class, 'update'])->middleware('permission:category-update');
+        Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->middleware('permission:category-delete');
 
-        Route::get('/brand', [BrandController::class, 'index']);
-        Route::post('/brand', [BrandController::class, 'store']);
-        Route::post('/brand-update/{brand}', [BrandController::class, 'update']);
-        Route::delete('/brand/{brand}', [BrandController::class, 'destroy']);
+        Route::get('/brand', [BrandController::class, 'index'])->middleware('permission:brand-delete');
+        Route::post('/brand', [BrandController::class, 'store'])->middleware('permission:brand-delete');
+        Route::post('/brand-update/{brand}', [BrandController::class, 'update'])->middleware('permission:brand-delete');
+        Route::delete('/brand/{brand}', [BrandController::class, 'destroy'])->middleware('permission:brand-delete');
     });
+
 });
+Route::get('/category', [CategoryController::class, 'index']);
+
+Route::get('/brand', [BrandController::class, 'index']);
 
