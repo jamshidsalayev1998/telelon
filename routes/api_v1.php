@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
 });
+//simple user routes
 Route::get('/category', [CategoryController::class, 'index']);
-
 Route::get('/brand', [BrandController::class, 'index']);
 
