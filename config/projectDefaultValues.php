@@ -15,9 +15,20 @@ return [
         'login',
         'register',
         'product-store',
+        'product-index',
         'product-show',
         'product-update',
-        'product-delete'
+        'product-delete',
+        'category-store',
+        'category-index',
+        'category-show',
+        'category-update',
+        'category-delete',
+        'brand-store',
+        'brand-index',
+        'brand-show',
+        'brand-update',
+        'brand-delete',
     ],
     'roles' => [
         'super-admin' => [
@@ -31,14 +42,29 @@ return [
             'role-delete',
             'role-index',
             'role-show',
+            'category-store',
+            'category-index',
+            'category-show',
+            'category-update',
+            'category-delete',
+            'brand-store',
+            'brand-index',
+            'brand-show',
+            'brand-update',
+            'brand-delete',
         ],
         'simple-user' => [
             'login',
             'register',
             'product-store',
+            'product-index',
             'product-show',
             'product-update',
-            'product-delete'
+            'product-delete',
+            'category-index',
+            'category-show',
+            'brand-index',
+            'brand-show',
         ]
     ],
     'users' => [
@@ -46,6 +72,11 @@ return [
             'name' => 'SuperAdmin',
             'roles' => ['super-admin'],
             'login' => '994571669'
+        ],
+        [
+            'name' => 'SuperAdmin2222',
+            'roles' => ['super-admin'],
+            'login' => '111111111'
         ]
     ],
     'default-languages' => [

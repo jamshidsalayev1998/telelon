@@ -9,19 +9,22 @@ class BrandResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param \Illuminate\Http\Request $request
+//     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        $category = CategoryResource::collection(array($this['category']));
-        return [
+        $result = [
             'id' => $this['id'],
             'slug' => $this['slug'],
             'image' => $this['image'],
             'status' => $this['status'],
             'name' => $this['name'],
-            'category' => count($category)?$category[0]:null
         ];
+//        if (property_exists($this,'category')) {
+            $category = CategoryResource::collection(array($this['category']));
+            $result['category'] = $category;
+//        }
+        return $result;
     }
 }
