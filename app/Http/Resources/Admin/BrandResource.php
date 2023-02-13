@@ -24,15 +24,13 @@ class BrandResource extends JsonResource
         ];
         if (key_exists('relations', $dataRequest)) {
             $searchable = array_filter($dataRequest['relations'], function ($value) {
-                return strpos($value, 'category') !== false;
+                return strpos($value, 'categories') !== false;
             });
             if (count($searchable)) {
-                $category = CategoryResource::collection(array($this['category']));
-                $result['category'] = $category;
+                $categories = CategoryResource::collection($this['categories']);
+                $result['categories'] = $categories;
             }
         }
-//        if (property_exists($this,'category')) {
-//        }
         return $result;
     }
 }

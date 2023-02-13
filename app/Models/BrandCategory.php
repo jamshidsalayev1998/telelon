@@ -15,21 +15,5 @@ class BrandCategory extends Model
     use HasFactory;
 
     protected $guarded = [];
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(function ($model) {
-            $user = auth()->user();
-            if (isset($user->id)) {
-                $model->created_by = $user->id;
-                $model->updated_by = $user->id;
-            }
-        });
-        self::updating(function ($model) {
-            $user = auth()->user();
-            if (isset($user->id)) {
-                $model->updated_by = $user->id;
-            }
-        });
-    }
+    public $timestamps = false;
 }
