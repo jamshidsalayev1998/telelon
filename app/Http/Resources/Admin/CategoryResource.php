@@ -9,21 +9,32 @@ class CategoryResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        $translates = [];
-        foreach ($this['translates'] as $translate) {
-            $translates[$translate['field_name']][$translate['language']] = $translate['value'];
-        }
-        return [
+        $dataRequest = $request->all();
+
+        $result = [
             'id' => $this['id'],
             'slug' => $this['slug'],
             'image' => $this['image'],
             'status' => $this['status'],
-            'translates' => $translates,
         ];
+        if (key_exists('relations', $dataRequest)) {
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'translates') !== false;
+            });
+            if (count($searchable)) {
+                $translates = [];
+                foreach ($this['translates'] as $translate) {
+                    $translates[$translate['field_name']][$translate['language']] = $translate['value'];
+                }
+                $result['translates'] = $translates;
+            }
+        }
+
+        return $result;
     }
 }

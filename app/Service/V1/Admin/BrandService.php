@@ -3,6 +3,7 @@
 namespace App\Service\V1\Admin;
 
 use App\Models\Brand;
+use App\Models\BrandCategory;
 use App\Service\FileSave;
 use App\Service\PaginationService;
 use Illuminate\Support\Facades\File;
@@ -19,7 +20,6 @@ class BrandService
     public static function storeBrand($data): Brand
     {
         $newBrand = new Brand();
-        $newBrand->category_id = $data['category_id'];
         $newBrand->name = $data['name'];
         $newBrand->slug = $data['slug'];
         if (key_exists('image', $data)) {
@@ -30,6 +30,7 @@ class BrandService
             }
         }
         $newBrand->save();
+        BrandCategoryService::storeBrandCategory($data['category_id'], $newBrand);
         return $newBrand;
     }
 
@@ -48,9 +49,11 @@ class BrandService
                 }
             }
         }
-        if (key_exists('category_id' , $data))$brand->category_id = $data['category_id'];
-        if (key_exists('name' , $data))$brand->name = $data['name'];
-        if (key_exists('slug' , $data))$brand->slug = $data['slug'];
+        if (key_exists('category_id', $data)) {
+            BrandCategoryService::updateBrandCategory($data['category_id'], $brand);
+        }
+        if (key_exists('name', $data)) $brand->name = $data['name'];
+        if (key_exists('slug', $data)) $brand->slug = $data['slug'];
         $brand->update();
         return $brand;
     }

@@ -28,7 +28,8 @@ class UpdateBrandRequest extends FormRequest
             'name' => ['string', 'min:2', 'max:25'],
             'slug' => [ Rule::unique('brands', 'slug')->where('is_deleted', 0)->ignore($this->route('brand') , 'id')],
             'image' => [ 'mimes:jpeg,png,jpg,svg,webp'],
-            'category_id' => [ Rule::exists('categories', 'id')->where('is_deleted', 0)]
+            'category_id' => ['array'],
+            'category_id.*' => ['required',  Rule::exists('categories', 'id')->where('is_deleted', 0)]
         ];
     }
 }
