@@ -38,8 +38,8 @@ class Brand extends Model
         });
     }
 
-    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo(Category::class , 'category_id' , 'id');
+        return $this->belongsToMany(Category::class,'brand_categories');
     }
 }

@@ -10,10 +10,11 @@ class BrandResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param \Illuminate\Http\Request $request
-//     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * //     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
+        $dataRequest = $request->all();
         $result = [
             'id' => $this['id'],
             'slug' => $this['slug'],
@@ -21,10 +22,15 @@ class BrandResource extends JsonResource
             'status' => $this['status'],
             'name' => $this['name'],
         ];
-//        if (property_exists($this,'category')) {
-            $category = CategoryResource::collection(array($this['category']));
-            $result['category'] = $category;
-//        }
+        if (key_exists('relations', $dataRequest)) {
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'categories') !== false;
+            });
+            if (count($searchable)) {
+                $categories = CategoryResource::collection($this['categories']);
+                $result['categories'] = $categories;
+            }
+        }
         return $result;
     }
 }

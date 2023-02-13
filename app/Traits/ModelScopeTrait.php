@@ -39,7 +39,8 @@ trait ModelScopeTrait
         $ifParam = is_array($relationsArray) && count($relationsArray);
         if ($ifParam) {
             foreach ($relationsArray as $relation) {
-                $query->with($relation);
+//                if ($query->relation($relation)->exists())
+                    $query->with($relation);
             }
         }
     }
