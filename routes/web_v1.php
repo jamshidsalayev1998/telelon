@@ -15,8 +15,7 @@ use Elastic\Elasticsearch\ClientBuilder;
 */
 
 Route::get('/', function () {
-    $client = ClientBuilder::create()->build();
-    var_dump($client);
+    return 'new telon uz server and cdn.telon.uz folder';
 });
 Route::get('/enter/{age}/{name}', function ($age, $name) {
     $client = ClientBuilder::create()
