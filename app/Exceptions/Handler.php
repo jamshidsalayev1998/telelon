@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -49,6 +51,9 @@ class Handler extends ExceptionHandler
         });
          $this->renderable(function (RelationNotFoundException $exception) {
             return $this->error('Not found', 404, $exception->getMessage());
+        });
+         $this->renderable(function (MethodNotAllowedHttpException $exception) {
+            return $this->error('Method Not Allowed', 405, $exception->getMessage());
         });
         $this->reportable(function (Throwable $e) {
             //

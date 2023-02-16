@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 use App\Http\Resources\Admin\AttributeResource;
+use App\Models\Attribute;
 use App\Service\V1\Admin\AttributeService;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -47,7 +48,6 @@ class AttributeController extends Controller
      */
     public function store(StoreAttributeRequest $request)
     {
-//        return $request->all();
         $result = AttributeService::storeAttribute($request->all());
         return $this->success($result, 'Ma`lumot qo`shildi', 201);
     }
@@ -81,7 +81,7 @@ class AttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAttributeRequest $request, $attribute)
+    public function update(UpdateAttributeRequest $request,Attribute $attribute)
     {
         $result = AttributeService::updateAttribute($attribute,$request->all());
         return $this->success($result,'Updated' , 200);
@@ -93,8 +93,9 @@ class AttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Attribute $attribute)
     {
-        //
+        $result = AttributeService::deleteAttribute($attribute);
+        return $this->success($result,'Deleted' , 200);
     }
 }
