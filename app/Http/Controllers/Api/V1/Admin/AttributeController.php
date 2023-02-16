@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttributeRequest;
+use App\Http\Requests\UpdateAttributeRequest;
 use App\Http\Resources\Admin\AttributeResource;
 use App\Service\V1\Admin\AttributeService;
 use App\Traits\ApiResponser;
@@ -80,9 +81,9 @@ class AttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAttributeRequest $request, $attribute)
     {
-        $result = AttributeService::updateAttribute($category,$request->all());
+        $result = AttributeService::updateAttribute($attribute,$request->all());
         return $this->success($result,'Updated' , 200);
     }
 

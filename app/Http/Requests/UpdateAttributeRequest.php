@@ -22,16 +22,16 @@ class UpdateAttributeRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => ['required', 'array'],
-            'name.uz' => ['required', 'string'],
-            'name.ru' => ['required', 'string'],
-            'type' => ['required', Rule::in(['select', 'string', 'range'])],
-            'static' => ['required', Rule::in([1, 0])],
-            'access_translate' => ['required', Rule::in([1, 0])],
-            'access_filter' => ['required', Rule::in([1, 0])],
+            'name' => ['array'],
+            'name.uz' => ['string'],
+            'name.ru' => ['string'],
+            'type' => [Rule::in(['select', 'string', 'range'])],
+            'static' => [Rule::in([1, 0])],
+            'access_translate' => [Rule::in([1, 0])],
+            'access_filter' => [Rule::in([1, 0])],
         ];
     }
 }
