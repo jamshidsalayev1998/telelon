@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
+use App\Http\Controllers\Api\V1\Admin\AttributeController;
 use App\Http\Controllers\Api\V1\Admin\BrandController;
 
 /*
@@ -35,6 +36,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/category', [CategoryController::class, 'store'])->middleware('permission:category-store');
         Route::post('/category-update/{category}', [CategoryController::class, 'update'])->middleware('permission:category-update');
         Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->middleware('permission:category-delete');
+
+        Route::get('/attribute', [AttributeController::class, 'index']);
+        Route::post('/attribute', [AttributeController::class, 'store']);
+        Route::post('/attribute-update/{attribute}', [AttributeController::class, 'update']);
+        Route::delete('/attribute/{attribute}', [AttributeController::class, 'destroy']);
 
         Route::get('/brand', [BrandController::class, 'index'])->middleware('permission:brand-delete');
         Route::post('/brand', [BrandController::class, 'store'])->middleware('permission:brand-delete');

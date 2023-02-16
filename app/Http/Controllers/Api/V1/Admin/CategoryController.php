@@ -44,7 +44,7 @@ class CategoryController extends Controller
      * @param  \App\Http\Requests\StoreCategoryRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): \Illuminate\Http\JsonResponse
     {
         $result = CategoryService::storeCategory($request->all());
         return $this->success($result, 'Ma`lumot qo`shildi', 201);
