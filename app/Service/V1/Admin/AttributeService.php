@@ -27,7 +27,7 @@ class AttributeService
         $newAttribute->access_filter = $data['access_filter'];
         $newAttribute->access_translate = $data['access_translate'];
         $newAttribute->type = $data['type'];
-        $newAttribute->order = $data['order'];
+        $newAttribute->order = $order;
         $newAttribute->static = $data['static'];
         if (key_exists('limit' , $data))
         $newAttribute->limit = json_encode($data['limit']);
