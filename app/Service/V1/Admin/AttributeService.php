@@ -18,10 +18,16 @@ class AttributeService
 
     public static function storeAttribute($data): Attribute
     {
+        $order = 1;
+        if (count(Attribute::notDeleted()->get())){
+            $last = Attribute::notDeleted()->orderBy('order' , 'DESC')->first();
+            $order = $last->order+1;
+        }
         $newAttribute = new Attribute();
         $newAttribute->access_filter = $data['access_filter'];
         $newAttribute->access_translate = $data['access_translate'];
         $newAttribute->type = $data['type'];
+        $newAttribute->order = $data['order'];
         $newAttribute->static = $data['static'];
         if (key_exists('limit' , $data))
         $newAttribute->limit = json_encode($data['limit']);

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed $access_filter
  * @property mixed $access_translate
  * @property false|mixed|string $limit
+ * @property mixed $order
  */
 class Attribute extends Model
 {
