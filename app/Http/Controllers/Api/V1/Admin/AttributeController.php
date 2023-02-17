@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 use App\Http\Resources\Admin\AttributeResource;
+use App\Http\Resources\Admin\AttributeShowResource;
 use App\Models\Attribute;
 use App\Service\V1\Admin\AttributeService;
 use App\Traits\ApiResponser;
@@ -58,9 +59,11 @@ class AttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Attribute $attribute)
     {
-        //
+        $translates = $attribute->translates;
+        $result['result'] = new AttributeShowResource($attribute);
+        return $this->success($result,'Success' , 200);
     }
 
     /**

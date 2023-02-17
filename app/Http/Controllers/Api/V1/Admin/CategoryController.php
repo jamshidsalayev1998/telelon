@@ -22,7 +22,6 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $result = CategoryService::indexCategories($request);
-//        return $result['result'];
         $resourceResult = CategoryResource::collection($result['result']);
         $result['result'] = $resourceResult;
         return $this->success($result,'Success' , 200);

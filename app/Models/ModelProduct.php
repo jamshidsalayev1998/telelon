@@ -8,21 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static notDeleted()
- * @property mixed $brand_id
  * @property mixed $category_id
- * @property mixed $type
- * @property mixed $static
- * @property mixed $access_filter
- * @property mixed $access_translate
- * @property false|mixed|string $limit
- * @property mixed $order
+ * @property mixed $brand_id
+ * @property int|mixed $order
+ * @property mixed $parent_id
  */
-class Attribute extends Model
+class ModelProduct extends Model
 {
     use HasFactory;
     use ModelScopeTrait;
 
-    public $tableName = 'attributes';
+    public $tableName = 'model_products';
 
     public static function boot()
     {
@@ -40,12 +36,5 @@ class Attribute extends Model
                 $model->updated_by = $user->id;
             }
         });
-    }
-
-    public function translates()
-    {
-        return $this->hasMany(Translate::class, 'model_id', 'id')->where('table_name', $this->tableName);
-
-
     }
 }

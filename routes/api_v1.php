@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/attribute', [AttributeController::class, 'index']);
         Route::post('/attribute', [AttributeController::class, 'store']);
         Route::put('/attribute/{attribute}', [AttributeController::class, 'update']);
+        Route::get('/attribute/{attribute}', [AttributeController::class, 'show']);
         Route::delete('/attribute/{attribute}', [AttributeController::class, 'destroy']);
 
         Route::get('/brand', [BrandController::class, 'index'])->middleware('permission:brand-delete');
