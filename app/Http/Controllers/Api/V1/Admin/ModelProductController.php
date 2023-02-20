@@ -3,22 +3,26 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreModelProductRequest;
+use App\Http\Resources\Admin\ModelProductResource;
 use App\Service\V1\Admin\ModelProductService;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class ModelProductController extends Controller
 {
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         $result = ModelProductService::indexModelProduct($request);
-//        $resourceResult = CategoryResource::collection($result['result']);
-//        $result['result'] = $resourceResult;
-//        return $this->success($result,'Success' , 200);
+        $resourceResult = ModelProductResource::collection($result['result']);
+        $result['result'] = $resourceResult;
+        return $this->success($result,'Success' , 200);
     }
 
     /**
@@ -35,11 +39,12 @@ class ModelProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreModelProductRequest $request)
     {
-        //
+        $result = ModelProductService::storeModelProduct($request->all());
+        return $this->success($result, 'Ma`lumot qo`shildi', 201);
     }
 
     /**
@@ -73,7 +78,8 @@ class ModelProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+//        $result = ModelProductService::updateModelProduct($category,$request->all());
+//        return $this->success($result,'Updated' , 200);
     }
 
     /**

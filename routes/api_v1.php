@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\AttributeController;
 use App\Http\Controllers\Api\V1\Admin\BrandController;
+use App\Http\Controllers\Api\V1\Admin\ModelProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/brand', [BrandController::class, 'store'])->middleware('permission:brand-delete');
         Route::post('/brand-update/{brand}', [BrandController::class, 'update'])->middleware('permission:brand-delete');
         Route::delete('/brand/{brand}', [BrandController::class, 'destroy'])->middleware('permission:brand-delete');
+
+
+        Route::get('/model', [ModelProductController::class, 'index']);
+        Route::post('/model', [ModelProductController::class, 'store']);
+        Route::post('/model/{model_product}', [ModelProductController::class, 'update']);
+        Route::delete('/model/{model_product}', [ModelProductController::class, 'destroy']);
     });
 
 });

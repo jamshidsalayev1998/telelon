@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static notDeleted()
+ * @method static findOrFail(mixed $attribute_id)
+ * @method static find(mixed $attribute_id)
  * @property mixed $brand_id
  * @property mixed $category_id
  * @property mixed $type

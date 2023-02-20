@@ -34,6 +34,7 @@ class ModelProductService
             $modelProduct->parent_id = $data['parent_id'];
         $modelProduct->save();
         (new TranslateService())->storeTranslate($modelProduct, $data['name'], 'name');
+        ModelProductAttributeService::storeModelProductAttributes($modelProduct,$data['attributes']);
         return $modelProduct;
     }
 
