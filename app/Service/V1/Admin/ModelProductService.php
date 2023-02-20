@@ -15,6 +15,7 @@ class ModelProductService
     {
         $modelProductEloquent = ModelProduct::notDeleted()
             ->with('translates:id,model_id,language,value,field_name')
+            ->relations($request->relations)
             ->filter($request->filters)->order($request->desc);
         return PaginationService::makePagination($modelProductEloquent, $request->limit);
     }

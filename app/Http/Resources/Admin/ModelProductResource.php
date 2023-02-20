@@ -9,7 +9,7 @@ class ModelProductResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -29,6 +29,13 @@ class ModelProductResource extends JsonResource
                     $translates[$translate['field_name']][$translate['language']] = $translate['value'];
                 }
                 $result['translates'] = $translates;
+            }
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'attributes') !== false;
+            });
+            if (count($searchable)) {
+                $result['attributes'] =ModelProductAttributeResource::collection($this['attributes']);
+//                $result['attributes'] =$this['attributes'];
             }
         }
 

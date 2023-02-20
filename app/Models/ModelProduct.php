@@ -37,4 +37,9 @@ class ModelProduct extends Model
             }
         });
     }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'model_product_attributes')->withPivot('value');
+    }
 }
