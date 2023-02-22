@@ -49,12 +49,13 @@ class ModelProductService
         if (key_exists('category_id', $data)) $modelProduct->category_id = $data['category_id'];
         if (key_exists('order', $data)) $modelProduct->order = $data['order'];
         if (key_exists('parent_id', $data)) $modelProduct->parent_id = $data['parent_id'];
+        ModelProductAttributeService::updateModelProductAttributes($modelProduct,$data['attributes']);
         $modelProduct->update();
         return $modelProduct;
     }
 
 //
-    public static function deleteCategory($modelProduct)
+    public static function deleteModelProduct($modelProduct)
     {
         $modelProduct->is_deleted = 1;
         $modelProduct->update();

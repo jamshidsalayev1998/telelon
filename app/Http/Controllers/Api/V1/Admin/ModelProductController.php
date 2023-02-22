@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreModelProductRequest;
+use App\Http\Requests\UpdateModelProductRequest;
 use App\Http\Resources\Admin\ModelProductResource;
+use App\Models\ModelProduct;
 use App\Service\V1\Admin\ModelProductService;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -12,6 +14,7 @@ use Illuminate\Http\Request;
 class ModelProductController extends Controller
 {
     use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +25,7 @@ class ModelProductController extends Controller
         $result = ModelProductService::indexModelProduct($request);
         $resourceResult = ModelProductResource::collection($result['result']);
         $result['result'] = $resourceResult;
-        return $this->success($result,'Success' , 200);
+        return $this->success($result, 'Success', 200);
     }
 
     /**
@@ -38,7 +41,7 @@ class ModelProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreModelProductRequest $request)
@@ -50,7 +53,7 @@ class ModelProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -61,7 +64,7 @@ class ModelProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -72,24 +75,25 @@ class ModelProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateModelProductRequest $request,ModelProduct $modelProduct)
     {
-//        $result = ModelProductService::updateModelProduct($category,$request->all());
-//        return $this->success($result,'Updated' , 200);
+        $result = ModelProductService::updateModelProduct($modelProduct, $request->all());
+        return $this->success($result, 'Updated', 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ModelProduct $modelProduct): \Illuminate\Http\JsonResponse
     {
-        //
+        $result = ModelProductService::deleteModelPRoduct($modelProduct);
+        return $this->success($result,'Deleted' , 200);
     }
 }
