@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\AttributeController;
 use App\Http\Controllers\Api\V1\Admin\BrandController;
 use App\Http\Controllers\Api\V1\Admin\ModelProductController;
+use App\Http\Controllers\Api\V1\Admin\AttributeTemporaryValueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/attribute/{attribute}', [AttributeController::class, 'show']);
         Route::delete('/attribute/{attribute}', [AttributeController::class, 'destroy']);
 
+        Route::post('/attribute-temporary-value/{attribute}', [AttributeTemporaryValueController::class, 'store']);
+
         Route::get('/brand', [BrandController::class, 'index'])->middleware('permission:brand-delete');
         Route::post('/brand', [BrandController::class, 'store'])->middleware('permission:brand-delete');
         Route::post('/brand-update/{brand}', [BrandController::class, 'update'])->middleware('permission:brand-delete');
@@ -51,6 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
         Route::get('/model', [ModelProductController::class, 'index']);
+        Route::get('/model/{model_product}', [ModelProductController::class, 'show']);
         Route::post('/model', [ModelProductController::class, 'store']);
         Route::put('/model/{model_product}', [ModelProductController::class, 'update']);
         Route::delete('/model/{model_product}', [ModelProductController::class, 'destroy']);

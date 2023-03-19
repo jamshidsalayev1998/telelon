@@ -9,6 +9,7 @@ use App\Http\Resources\Admin\AttributeResource;
 use App\Http\Resources\Admin\AttributeShowResource;
 use App\Models\Attribute;
 use App\Service\V1\Admin\AttributeService;
+use App\Service\V1\Admin\AttributeTemporaryValueService;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,7 @@ class AttributeController extends Controller
     public function store(StoreAttributeRequest $request)
     {
         $result = AttributeService::storeAttribute($request->all());
+        $data = $request->all();
         return $this->success($result, 'Ma`lumot qo`shildi', 201);
     }
 
