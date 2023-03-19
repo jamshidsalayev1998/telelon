@@ -48,4 +48,8 @@ class Attribute extends Model
     {
         return $this->hasMany(Translate::class, 'model_id', 'id')->where('table_name', $this->tableName);
     }
+    public function attribute_temporary_values(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AttributeTemporaryValue::class, 'attribute_id', 'id');
+    }
 }

@@ -23,6 +23,7 @@ class AttributeShowResource extends JsonResource
             'limit' => $this->limit,
             'static' => $this->static,
             'order' => $this->order,
+            'attribute_temporary_values' => AttributeTemporaryValueResource::collection($this->attribute_temporary_values)
         ];
         $translates = [];
         foreach ($this->translates as $translate) {
