@@ -4,6 +4,9 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $attribute_temporary_values
+ */
 class AttributeShowResource extends JsonResource
 {
     /**
@@ -23,13 +26,22 @@ class AttributeShowResource extends JsonResource
             'limit' => $this->limit,
             'static' => $this->static,
             'order' => $this->order,
-            'attribute_temporary_values' => AttributeTemporaryValueResource::collection($this->attribute_temporary_values)
         ];
         $translates = [];
         foreach ($this->translates as $translate) {
             $translates[$translate->field_name][$translate->language] = $translate->value;
         }
         $result['translates'] = $translates;
+
+        if (key_exists('relations', $dataRequest)) {
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'attribute_temporary_values') !== false;
+            });
+            if (count($searchable)) {
+                $result['attribute_temporary_values'] = AttributeTemporaryValueResource::collection($this->attribute_temporary_values);
+            }
+        }
+
         return $result;
     }
 }
