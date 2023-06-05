@@ -50,6 +50,6 @@ class Attribute extends Model
     }
     public function attribute_temporary_values(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(AttributeTemporaryValue::class, 'attribute_id', 'id');
+        return $this->hasMany(AttributeTemporaryValue::class, 'attribute_id', 'id')->where('is_deleted' , 0);
     }
 }

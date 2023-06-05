@@ -43,7 +43,7 @@ class ModelProductService
     {
         if (key_exists('name', $data)) (new TranslateService)->updateTranslate($modelProduct, $data['name'], 'name');
         if (key_exists('status', $data)) {
-            $modelProduct->status = $data['status'];
+            $modelProduct->status = $data['pstatus'];
         }
         if (key_exists('brand_id', $data)) $modelProduct->brand_id = $data['brand_id'];
         if (key_exists('category_id', $data)) $modelProduct->category_id = $data['category_id'];

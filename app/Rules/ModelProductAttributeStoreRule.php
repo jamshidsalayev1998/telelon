@@ -34,7 +34,7 @@ class ModelProductAttributeStoreRule implements Rule
         }
 
         if ($attribute->type === 'select') {
-            if (empty($value['value']) || !is_array($value['value'])) {
+            if (empty($value['temporary_values']) || !is_array($value['temporary_values'])) {
                 return false;
             }
         }

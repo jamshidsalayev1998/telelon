@@ -16,8 +16,11 @@ class ModelProductAttributeService
                 'model_product_id' => $modelProduct->id,
                 'attribute_id' => $item['attribute_id'],
             ];
-            if ($attribute->type == 'select' || ($attribute->type == 'string' && $attribute->static)) {
+            if ($attribute->type == 'string' && $attribute->static) {
                 $value['value'] = json_encode($item['value']);
+            }
+            if ($attribute->type == 'select') {
+                ModelProductAttributeTemporaryValuesService::storeModelProductAttributeTemporaryValues($modelProduct,$attribute,$item['temporary_values']);
             }
             ModelProductAttribute::create($value);
         }
@@ -25,20 +28,6 @@ class ModelProductAttributeService
 
     public static function updateModelProductAttributes($modelProduct, $data)
     {
-//        $newAttributeIds = array_column($data, 'attribute_id');
-//        $oldAttributeIds = ModelProductAttribute::where('model_product_id', $modelProduct->id)->pluck('attribute_id')->toArray();
-//        $needArray = array_diff()
-//        foreach ($data as $item) {
-//            $attribute = Attribute::find($item['attribute_id']);
-//            $value = [
-//                'model_product_id' => $modelProduct->id,
-//                'attribute_id' => $item['attribute_id'],
-//            ];
-//            if ($attribute->type == 'select' || ($attribute->type == 'string' && $attribute->static)) {
-//                $value['value'] = json_encode($item['value']);
-//            }
-//            ModelProductAttribute::create($value);
-//        }
         foreach ($data as $attribute) {
             $attributeId = $attribute['attribute_id'];
             $value = $attribute['value'];

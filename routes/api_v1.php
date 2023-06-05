@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/attribute/{attribute}', [AttributeController::class, 'destroy']);
 
         Route::post('/attribute-temporary-value/{attribute}', [AttributeTemporaryValueController::class, 'store']);
+        Route::put('/attribute-temporary-value/{attributeTemporaryValue}', [AttributeTemporaryValueController::class, 'update']);
+        Route::delete('/attribute-temporary-value/{attributeTemporaryValue}', [AttributeTemporaryValueController::class, 'destroy']);
 
         Route::get('/brand', [BrandController::class, 'index'])->middleware('permission:brand-delete');
         Route::post('/brand', [BrandController::class, 'store'])->middleware('permission:brand-delete');
