@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Admin;
 
 use App\Models\Attribute;
+use App\Models\ModelProductAttributeTemporaryValue;
 use App\Models\Translate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ class ModelProductAttributeResource extends JsonResource
      */
     public function toArray($request)
     {
+        $temporaryValues = ModelProductAttributeTemporaryValue::where('model_product_id' , $this['pivot']['model_product_id'])->where('attribute_id' , $this['pivot']['attribute_id'])->with('attribute_temporary_value.translates')->get();
         $result = [
             'id' => $this['id'],
             'type' => $this['type'],
@@ -25,7 +27,7 @@ class ModelProductAttributeResource extends JsonResource
             'access_filter' => $this['access_filter'],
             'limit' => $this['limit'],
             'access_translate' => $this['access_translate'],
-            'value' => $this['pivot']['value'],
+            'values' => ModelProductAttributeTemporaryValueResource::collection($temporaryValues),
         ];
         $translates = [];
         $dataRequest = $request->all();
@@ -42,6 +44,7 @@ class ModelProductAttributeResource extends JsonResource
                 $result['translates'] = $translates;
             }
         }
+
 
         return $result;
 //        return $this;

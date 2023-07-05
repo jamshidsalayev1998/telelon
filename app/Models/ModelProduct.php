@@ -40,6 +40,26 @@ class ModelProduct extends Model
 
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'model_product_attributes')->withPivot('value');
+        return $this->belongsToMany(Attribute::class, 'model_product_attributes');
+    }
+
+//    public function attributes()
+//    {
+//        return $this->belongsToMany(Attribute::class, 'model_product_attribute_temporary_values', 'model_product_id', 'attribute_id')
+//                    ->withPivot('attribute_temporary_value_id');
+//    }
+    public function translates(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Translate::class, 'model_id', 'id')->where('table_name', $this->tableName);
+    }
+
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ModelProduct::class,'parent_id')->with('children');
+    }
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ModelProduct::class,'parent_id');
     }
 }

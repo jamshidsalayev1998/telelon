@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreModelProductRequest;
 use App\Http\Requests\UpdateModelProductRequest;
 use App\Http\Resources\Admin\ModelProductResource;
+use App\Http\Resources\Admin\ModelProductShowResource;
 use App\Models\ModelProduct;
 use App\Service\V1\Admin\ModelProductService;
 use App\Traits\ApiResponser;
@@ -23,6 +24,7 @@ class ModelProductController extends Controller
     public function index(Request $request)
     {
         $result = ModelProductService::indexModelProduct($request);
+//        return $result;
         $resourceResult = ModelProductResource::collection($result['result']);
         $result['result'] = $resourceResult;
         return $this->success($result, 'Success', 200);
@@ -46,6 +48,7 @@ class ModelProductController extends Controller
      */
     public function store(StoreModelProductRequest $request)
     {
+//        return $request->all();
         $result = ModelProductService::storeModelProduct($request->all());
         return $this->success($result, 'Ma`lumot qo`shildi', 201);
     }
@@ -54,11 +57,14 @@ class ModelProductController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(ModelProduct $modelProduct)
     {
-        return $modelProduct;
+        $translates = $modelProduct->translates;
+//        return $modelProduct->attributes;
+        $result['result'] = new ModelProductShowResource($modelProduct);
+        return $this->success($result,'Success' , 200);
     }
 
     /**

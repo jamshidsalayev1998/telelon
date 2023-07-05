@@ -18,6 +18,7 @@ class AttributeTemporaryValueResource extends JsonResource
 
         $result = [
             'id' => $this['id'],
+            'value' => $this['value'],
         ];
         if (key_exists('relations', $dataRequest)) {
             $searchable = array_filter($dataRequest['relations'], function ($value) {

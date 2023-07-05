@@ -11,4 +11,9 @@ class ModelProductAttributeTemporaryValue extends Model
 
     protected $guarded = [];
     public $timestamps = false;
+
+    public function attribute_temporary_value()
+    {
+        return $this->belongsTo(AttributeTemporaryValue::class,'attribute_temporary_value_id' , 'id');
+    }
 }

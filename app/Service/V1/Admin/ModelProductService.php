@@ -15,6 +15,8 @@ class ModelProductService
     {
         $modelProductEloquent = ModelProduct::notDeleted()
             ->with('translates:id,model_id,language,value,field_name')
+            ->with('children')
+            ->whereNull('parent_id')
             ->relations($request->relations)
             ->filter($request->filters)->order($request->desc);
         return PaginationService::makePagination($modelProductEloquent, $request->limit);
@@ -28,14 +30,20 @@ class ModelProductService
             $order = $lastModelProduct->order + 1;
         }
         $modelProduct = new ModelProduct();
-        $modelProduct->category_id = $data['category_id'];
-        $modelProduct->brand_id = $data['brand_id'];
         $modelProduct->order = $order;
-        if (key_exists('parent_id', $data))
+        if (key_exists('parent_id', $data)) {
             $modelProduct->parent_id = $data['parent_id'];
+            $modelProductParent = ModelProduct::find($data['parent_id']);
+            $modelProduct->category_id = $modelProductParent->category_id;
+            $modelProduct->brand_id = $modelProductParent->brand_id;
+
+        } else {
+            $modelProduct->category_id = $data['category_id'];
+            $modelProduct->brand_id = $data['brand_id'];
+        }
         $modelProduct->save();
         (new TranslateService())->storeTranslate($modelProduct, $data['name'], 'name');
-        ModelProductAttributeService::storeModelProductAttributes($modelProduct,$data['attributes']);
+        ModelProductAttributeService::storeModelProductAttributes($modelProduct, $data['attributes']);
         return $modelProduct;
     }
 
@@ -49,7 +57,7 @@ class ModelProductService
         if (key_exists('category_id', $data)) $modelProduct->category_id = $data['category_id'];
         if (key_exists('order', $data)) $modelProduct->order = $data['order'];
         if (key_exists('parent_id', $data)) $modelProduct->parent_id = $data['parent_id'];
-        ModelProductAttributeService::updateModelProductAttributes($modelProduct,$data['attributes']);
+        ModelProductAttributeService::updateModelProductAttributes($modelProduct, $data['attributes']);
         $modelProduct->update();
         return $modelProduct;
     }

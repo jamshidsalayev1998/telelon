@@ -20,7 +20,7 @@ class ModelProductAttributeService
                 $value['value'] = json_encode($item['value']);
             }
             if ($attribute->type == 'select') {
-                ModelProductAttributeTemporaryValuesService::storeModelProductAttributeTemporaryValues($modelProduct,$attribute,$item['temporary_values']);
+                ModelProductAttributeTemporaryValuesService::storeModelProductAttributeTemporaryValues($modelProduct, $attribute, $item['temporary_values']);
             }
             ModelProductAttribute::create($value);
         }
@@ -30,7 +30,9 @@ class ModelProductAttributeService
     {
         foreach ($data as $attribute) {
             $attributeId = $attribute['attribute_id'];
-            $value = $attribute['value'];
+            $value = null;
+            if (key_exists('value', $attribute))
+                $value = $attribute['value'];
 
             // Check if the attribute already exists in the pivot table
             if ($modelProduct->attributes()->where('id', $attributeId)->exists()) {
@@ -61,6 +63,10 @@ class ModelProductAttributeService
                         'type' => 'Add the new attribute to the pivot table'
                     ]);
                 }
+            }
+            $attributeSelf = Attribute::find($attribute['attribute_id']);
+            if ($attributeSelf->type == 'select') {
+                ModelProductAttributeTemporaryValuesService::storeModelProductAttributeTemporaryValues($modelProduct, $attributeSelf, $attribute['temporary_values']);
             }
         }
 
