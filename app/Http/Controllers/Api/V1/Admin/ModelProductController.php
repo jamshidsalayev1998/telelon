@@ -63,7 +63,7 @@ class ModelProductController extends Controller
     {
         $translates = $modelProduct->translates;
 //        return $modelProduct->attributes;
-        $result['result'] = new ModelProductShowResource($modelProduct);
+        $result['result'] = new ModelProductResource($modelProduct);
         return $this->success($result,'Success' , 200);
     }
 

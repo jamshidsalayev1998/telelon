@@ -24,7 +24,7 @@ class StoreModelProductRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
             'name' => ['required', 'array'],

@@ -32,10 +32,13 @@ class ModelProductService
         $modelProduct = new ModelProduct();
         $modelProduct->order = $order;
         if (key_exists('parent_id', $data)) {
-            $modelProduct->parent_id = $data['parent_id'];
-            $modelProductParent = ModelProduct::find($data['parent_id']);
-            $modelProduct->category_id = $modelProductParent->category_id;
-            $modelProduct->brand_id = $modelProductParent->brand_id;
+            if ($data['parent_id']) {
+
+                $modelProduct->parent_id = $data['parent_id'];
+                $modelProductParent = ModelProduct::find($data['parent_id']);
+                $modelProduct->category_id = $modelProductParent->category_id;
+                $modelProduct->brand_id = $modelProductParent->brand_id;
+            }
 
         } else {
             $modelProduct->category_id = $data['category_id'];
