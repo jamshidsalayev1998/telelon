@@ -62,8 +62,11 @@ class ModelProductController extends Controller
     public function show(ModelProduct $modelProduct)
     {
         $translates = $modelProduct->translates;
+        $category = $modelProduct->category;
+        $modelProductNew = ModelProduct::with('translates')->with('category.translates')->with('brand.translates')->find($modelProduct->id);
 //        return $modelProduct->attributes;
-        $result['result'] = new ModelProductResource($modelProduct);
+//        return $modelProductNew;
+        $result['result'] = new ModelProductResource($modelProductNew);
         return $this->success($result,'Success' , 200);
     }
 

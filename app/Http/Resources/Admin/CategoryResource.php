@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Models\Category;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategoryResource extends JsonResource
@@ -28,8 +29,16 @@ class CategoryResource extends JsonResource
             });
             if (count($searchable)) {
                 $translates = [];
-                foreach ($this['translates'] as $translate) {
-                    $translates[$translate['field_name']][$translate['language']] = $translate['value'];
+                if ($this['translates']) {
+                    foreach ($this['translates'] as $translate) {
+                        $translates[$translate['field_name']][$translate['language']] = $translate['value'];
+                    }
+                }
+                else{
+                    $cat = Category::with('translates')->find($this['id']);
+                    foreach ($cat->translates as $translate) {
+                        $translates[$translate['field_name']][$translate['language']] = $translate['value'];
+                    }
                 }
                 $result['translates'] = $translates;
             }

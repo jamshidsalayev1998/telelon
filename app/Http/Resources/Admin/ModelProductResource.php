@@ -39,6 +39,20 @@ class ModelProductResource extends JsonResource
 //                $result['attributes'] =$this['attributes'];
             }
             $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'category') !== false;
+            });
+            if (count($searchable)) {
+                $result['category'] = new CategoryResource($this['category']);
+//                $result['attributes'] =$this['attributes'];
+            }
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
+                return strpos($value, 'brand') !== false;
+            });
+            if (count($searchable)) {
+                $result['brand'] = new BrandResource($this['brand']);
+//                $result['attributes'] =$this['attributes'];
+            }
+            $searchable = array_filter($dataRequest['relations'], function ($value) {
                 return strpos($value, 'children') !== false;
             });
 //            if (count($searchable)) {
