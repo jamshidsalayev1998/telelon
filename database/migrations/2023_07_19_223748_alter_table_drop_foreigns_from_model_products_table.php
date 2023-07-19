@@ -13,9 +13,13 @@ class AlterTableDropForeignsFromModelProductsTable extends Migration
      */
     public function up()
     {
+         Schema::table('model_products', function (Blueprint $table) {
+            $table->dropForeign(['brand_id']);
+        });
+
+        // Remove the foreign key for category_id
         Schema::table('model_products', function (Blueprint $table) {
-             $table->dropForeign('brand_id');
-             $table->dropForeign('category_id');
+            $table->dropForeign(['category_id']);
         });
     }
 
