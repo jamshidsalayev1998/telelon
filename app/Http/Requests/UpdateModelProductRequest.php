@@ -32,8 +32,8 @@ class UpdateModelProductRequest extends FormRequest
             'brand_id' => ['nullable', Rule::exists('brands', 'id')->where('is_deleted', 0)],
             'category_id' => ['nullable', Rule::exists('categories', 'id')->where('is_deleted', 0)],
             'parent_id' => ['nullable',Rule::exists('model_products', 'id')->where('is_deleted', 0)],
-            'attributes' => ['required', 'array'],
-            'attributes.*.attribute_id' => ['required', Rule::exists('attributes', 'id')->where('is_deleted', 0)],
+            'attributes' => ['array'],
+            'attributes.*.attribute_id' => ['nullable', Rule::exists('attributes', 'id')->where('is_deleted', 0)],
             'attributes.*' => ['required', new ModelProductAttributeStoreRule()]
         ];
     }
