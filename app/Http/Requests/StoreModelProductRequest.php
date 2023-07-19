@@ -14,7 +14,7 @@ class StoreModelProductRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -32,7 +32,7 @@ class StoreModelProductRequest extends FormRequest
             'name.ru' => ['required', 'string'],
 //            'brand_id' => [Rule::exists('brands', 'id')->where('is_deleted', 0)],
 //            'category_id' => [Rule::exists('categories', 'id')->where('is_deleted', 0)],
-            'parent_id' => [Rule::exists('model_products', 'id')->where('is_deleted', 0)],
+            'parent_id' => [Rule::exists('model_products', 'id')->where('is_deleted', 0), 'nullable'],
             'attributes' => ['array'],
             'attributes.*.attribute_id' => ['required', Rule::exists('attributes', 'id')->where('is_deleted', 0)],
             'attributes.*' => ['required', new ModelProductAttributeStoreRule],
