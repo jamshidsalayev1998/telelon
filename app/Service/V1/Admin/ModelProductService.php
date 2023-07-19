@@ -57,13 +57,22 @@ class ModelProductService
         if (key_exists('status', $data)) {
             $modelProduct->status = $data['pstatus'];
         }
-        if (key_exists('brand_id', $data)) $modelProduct->brand_id = $data['brand_id'];
-        if (key_exists('category_id', $data)) $modelProduct->category_id = $data['category_id'];
+        if (key_exists('brand_id', $data)) {
+            if ($data['brand_id']) {
+                $modelProduct->brand_id = $data['brand_id'];
+            }
+        }
+        if (key_exists('category_id', $data)) {
+            if ($data['category_id']) {
+                $modelProduct->category_id = $data['category_id'];
+
+            }
+        }
         if (key_exists('order', $data)) $modelProduct->order = $data['order'];
         if (key_exists('parent_id', $data)) {
-             if ($data['parent_id']) {
-                 $modelProduct->parent_id = $data['parent_id'];
-             }
+            if ($data['parent_id']) {
+                $modelProduct->parent_id = $data['parent_id'];
+            }
         }
         ModelProductAttributeService::updateModelProductAttributes($modelProduct, $data['attributes']);
         $modelProduct->update();
