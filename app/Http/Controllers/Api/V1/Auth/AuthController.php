@@ -9,6 +9,7 @@ use App\Http\Requests\ResendPasswordRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\UserPermissionsResource;
+use App\Models\CaptchaImageKey;
 use App\Models\User;
 use App\Models\UserCode;
 use App\Service\V1\Auth\GeneratePasswordService;
@@ -120,17 +121,33 @@ class AuthController extends Controller
 
     public function check(AuthNumberCheckRequest $authNumberCheckRequest): \Illuminate\Http\JsonResponse
     {
+        $temp_key = $authNumberCheckRequest->captcha['temp_key'];
+        $timeEnd = date('Y-m-d H:i:s', strtotime('- 5 minutes'));
+        $captchaImageKey = CaptchaImageKey::where('temp_key', $temp_key)->first();
+        if (!$captchaImageKey) {
+            return $this->success_with_code(false, [], 'Captcha key topilmadi yoki vaqti tugagan', 600);
+        } else {
+            $captchaImage = $captchaImageKey->captcha_image;
+            if ($captchaImage->code != $authNumberCheckRequest->captcha['code']) {
+                return $this->success_with_code(false, [], 'Captcha key noto`g`ri', 601);
+            }
+        }
+        CaptchaImageKey::where('temp_key', $temp_key)->delete();
         if (User::where('login', $authNumberCheckRequest->login)->exists()) {
             $finUser = User::where('login', $authNumberCheckRequest->login)->first();
             $password = GeneratePasswordService::generateUserPassword();
             $finUser->password = bcrypt($password);
             SendPasswordToUserService::sendPasswordToUser($password, $finUser->login, $finUser->id);
             $finUser->update();
+            return $this->success_with_code(true, [], 'Sms jo`natildi', 602);
+        } else {
+            return $this->success_with_code(false, [], 'Raqam topilmadi', 603);
+
         }
-        $response['result'] = array(
-            'code' => User::where('login', $authNumberCheckRequest->login)->exists() ? 200 : 404
-        );
-        return $this->success($response, 'Success');
+//        $response['result'] = array(
+//            'code' => User::where('login', $authNumberCheckRequest->login)->exists() ? 200 : 404
+//        );
+//        return $this->success($response, 'Success');
     }
 
     public function resend(ResendPasswordRequest $resendPasswordRequest): \Illuminate\Http\JsonResponse
@@ -139,7 +156,7 @@ class AuthController extends Controller
         $lastCode = UserCode::orderBy('id', 'DESC')->where('user_id', $tmpUser->id)->first();
         $limited = '';
         if ($lastCode)
-        $limited = date('Y-m-d H:i:s', strtotime("+3 minutes", strtotime($lastCode->created_at)));
+            $limited = date('Y-m-d H:i:s', strtotime("+3 minutes", strtotime($lastCode->created_at)));
         if (!$lastCode || date('Y-m-d H:i:s') >= $limited) {
             $password = GeneratePasswordService::generateUserPassword();
             SendPasswordToUserService::sendPasswordToUser($password, $resendPasswordRequest->login, $tmpUser->id);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Admin\AttributeController;
 use App\Http\Controllers\Api\V1\Admin\BrandController;
 use App\Http\Controllers\Api\V1\Admin\ModelProductController;
 use App\Http\Controllers\Api\V1\Admin\AttributeTemporaryValueController;
+use App\Http\Controllers\Api\V1\Auth\CaptchaImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 });
 //simple user routes
+Route::get('/get-captcha', [CaptchaImageController::class, 'get_captcha']);
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/brand', [BrandController::class, 'index']);
 

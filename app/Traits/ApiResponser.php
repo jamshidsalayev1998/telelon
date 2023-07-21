@@ -24,6 +24,16 @@ trait ApiResponser
         ], $code);
     }
 
+    protected function success_with_code($status = true,$data = [], string $message = null, $messageCode = null, int $code = 200): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data,
+            'error_code' => $messageCode
+        ], $code);
+    }
+
     /**
      * Return an error JSON response.
      *
