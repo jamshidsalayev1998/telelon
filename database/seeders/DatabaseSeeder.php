@@ -17,7 +17,10 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
             RoleSeeder::class,
             DefaultUserSeeder::class,
-            LanguageSeeder::class
+            LanguageSeeder::class,
+            CaptchaImageSeeder::class,
+            RegionSeeder::class,
+            AreaSeeder::class
         ]);
     }
 }

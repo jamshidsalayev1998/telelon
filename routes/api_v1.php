@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\Admin\BrandController;
 use App\Http\Controllers\Api\V1\Admin\ModelProductController;
 use App\Http\Controllers\Api\V1\Admin\AttributeTemporaryValueController;
 use App\Http\Controllers\Api\V1\Auth\CaptchaImageController;
+use App\Http\Controllers\Api\V1\General\RegionController;
+use App\Http\Controllers\Api\V1\General\AreaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,9 +65,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/model/{model_product}', [ModelProductController::class, 'destroy']);
     });
 
+
 });
 //simple user routes
 Route::get('/get-captcha', [CaptchaImageController::class, 'get_captcha']);
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/brand', [BrandController::class, 'index']);
+Route::get('/regions' , [RegionController::class,'index']);
+Route::get('/areas' , [AreaController::class,'index']);
 
