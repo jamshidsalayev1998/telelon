@@ -189,6 +189,8 @@ return [
             ]
         ]
     ],
+
+    
     'areas' => array(
         array("id" => "1", "name" => ["uz" => "Mo'ynoq tumani", "ru" => "Mo'ynoq tumani"], "region_id" => "1"),
         array("id" => "2", "name" => ["uz" => "Kegeyli tumani", "ru" => "Kegeyli tumani"], "region_id" => "1"),
