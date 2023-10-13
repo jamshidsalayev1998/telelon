@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             CaptchaImageSeeder::class,
             RegionSeeder::class,
-            AreaSeeder::class
+            AreaSeeder::class,
+            CurrencySeeder::class,
+            ProductStatusSeeder::class
         ]);
     }
 }

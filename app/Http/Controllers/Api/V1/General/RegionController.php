@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class RegionController extends Controller
 {
     use ApiResponser;
-    public function index()
+    public function index(Request $request)
     {
         $regions = Region::with('translates')->get();
         $result['result'] = RegionResource::collection($regions);

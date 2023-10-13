@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\File;
 
 class ModelProductService
 {
-    public static function indexModelProduct($request): array
+    public static function indexModelProduct($request)
     {
         $modelProductEloquent = ModelProduct::notDeleted()
             ->with('translates:id,model_id,language,value,field_name')
+            ->with('translate:id,model_id,language,value,field_name')
             ->with('children')
             ->whereNull('parent_id')
             ->relations($request->relations)

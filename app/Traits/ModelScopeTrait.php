@@ -9,29 +9,33 @@ trait ModelScopeTrait
 {
     public function scopeFilter($query, $filterArray)
     {
-        $ifParam = is_array($filterArray) && count($filterArray);
-        if ($ifParam) {
-            foreach ($filterArray as $filter) {
-                if (array_key_exists('fieldValue', $filter)) {
-                    if ($filter['fieldOperator'] == 'LIKE') {
-                        if (Schema::hasColumn($this->tableName, $filter['fieldKey'])) {
-                            $query->where($filter['fieldKey'], $filter['fieldOperator'], '%' . $filter['fieldValue'] . '%');
-                            $query->orWhereHas('translates', function ($queryRelation) use ($filter) {
-                                $queryRelation->where('value', 'LIKE', '%' . $filter['fieldValue'] . '%');
-                            });
+        if (!is_array($filterArray)) {
+            $filterArray = json_decode($filterArray);
+            $ifParam = is_array($filterArray) && count($filterArray);
+            if ($ifParam) {
+                foreach ($filterArray as $filter) {
+                    if (array_key_exists('fieldValue', $filter)) {
+                        if ($filter['fieldOperator'] == 'LIKE') {
+                            if (Schema::hasColumn($this->tableName, $filter['fieldKey'])) {
+                                $query->where($filter['fieldKey'], $filter['fieldOperator'], '%' . $filter['fieldValue'] . '%');
+                                $query->orWhereHas('translates', function ($queryRelation) use ($filter) {
+                                    $queryRelation->where('value', 'LIKE', '%' . $filter['fieldValue'] . '%');
+                                });
+                            } else {
+                                $query->whereHas('translates', function ($queryRelation) use ($filter) {
+                                    $queryRelation->where('value', 'LIKE', '%' . $filter['fieldValue'] . '%');
+                                });
+                            }
+
                         } else {
-                            $query->whereHas('translates', function ($queryRelation) use ($filter) {
-                                $queryRelation->where('value', 'LIKE', '%' . $filter['fieldValue'] . '%');
-                            });
+                            $query->where($filter['fieldKey'], $filter['fieldOperator'], $filter['fieldValue']);
                         }
 
-                    } else {
-                        $query->where($filter['fieldKey'], $filter['fieldOperator'], $filter['fieldValue']);
                     }
-
                 }
             }
         }
+
     }
 
     public function scopeRelations($query, $relationsArray)
@@ -40,7 +44,7 @@ trait ModelScopeTrait
         if ($ifParam) {
             foreach ($relationsArray as $relation) {
 //                if ($query->relation($relation)->exists())
-                    $query->with($relation);
+                $query->with($relation);
             }
         }
     }
@@ -67,7 +71,13 @@ trait ModelScopeTrait
 
     public function scopeTranslate($query): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(Translate::class, 'model_id', 'id')->where('table_name', $this->tableName)->where('language', app()->getLocale());
+        return $this->hasOne(Translate::class, 'model_id', 'id')->where('table_name', $this->tableName)->where('language', app()->getLocale()?app()->getLocale():'uz');
+    }
+
+    public function scopeMine($query)
+    {
+        $user = auth()->user();
+        $query->where('user_id', $user->id);
     }
 
 }

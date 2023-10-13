@@ -27,8 +27,9 @@ class AttributeController extends Controller
     public function index(Request $request)
     {
         $resultH = AttributeService::indexAttributes($request);
-        $resourceResult = AttributeResource::collection($resultH['result']);
-        $result['result'] = $resourceResult;
+        $resourceResult = AttributeResource::collection($resultH->items());
+        $resultData['result'] = $resourceResult;
+        $resultData['all_count'] = $resultH->total();
         return $this->success($result, 'Success', 200);
     }
 

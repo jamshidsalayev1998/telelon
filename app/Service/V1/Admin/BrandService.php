@@ -10,11 +10,18 @@ use Illuminate\Support\Facades\File;
 
 class BrandService
 {
-    public static function indexBrands($request): array
+    public static function indexBrands($request)
     {
-        $departmentEloquent = Brand::notDeleted()
+        $brandEloquent = Brand::notDeleted()
+            ->where(function ($query) use ($request) {
+                if ($request->category_id) {
+                    $query->whereHas('categories', function ($query) use ($request) {
+                        $query->where('categories.id', $request->category_id);
+                    });
+                }
+            })
             ->filter($request->filters)->relations($request->relations)->order($request->desc);
-        return PaginationService::makePagination($departmentEloquent, $request->limit);
+        return PaginationService::makePagination($brandEloquent, $request->limit);
     }
 
     public static function storeBrand($data): Brand

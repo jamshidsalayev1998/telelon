@@ -22,9 +22,10 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $result = CategoryService::indexCategories($request);
-        $resourceResult = CategoryResource::collection($result['result']);
-        $result['result'] = $resourceResult;
-        return $this->success($result,'Success' , 200);
+        $resourceResult = CategoryResource::collection($result->items());
+        $resultData['result'] = $resourceResult;
+        $resultData['all_count'] = $result->total();
+        return $this->success($resultData,'Success' , 200);
     }
 
     /**

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthNumberCheckRequest;
+use App\Http\Requests\CheckCodeRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendPasswordRequest;
+use App\Http\Requests\SendSmsCodeRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\UserPermissionsResource;
@@ -15,10 +17,12 @@ use App\Models\UserCode;
 use App\Service\V1\Auth\GeneratePasswordService;
 use App\Service\V1\Auth\SendPasswordToUserService;
 use App\Traits\ApiResponser;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -31,6 +35,17 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $registerRequest): \Illuminate\Http\JsonResponse
     {
+        $temp_key = $registerRequest->captcha['temp_key'];
+        $captchaImageKey = CaptchaImageKey::where('temp_key', $temp_key)->first();
+        if (!$captchaImageKey) {
+            return $this->success_with_code(false, [], 'Captcha key topilmadi yoki vaqti tugagan', 600);
+        } else {
+            $captchaImage = $captchaImageKey->captcha_image;
+            if ($captchaImage->code != $registerRequest->captcha['code']) {
+                return $this->success_with_code(false, [], 'Captcha key noto`g`ri', 601);
+            }
+        }
+        CaptchaImageKey::where('temp_key', $temp_key)->delete();
         $attr = $registerRequest->all();
         $password = GeneratePasswordService::generateUserPassword();
         $user = User::create([
@@ -69,6 +84,10 @@ class AuthController extends Controller
                     $response['result'] = array(
                         'token' => $token
                     );
+                    if (!$user->register_code_status){
+                        $user->register_code_status = 1;
+                        $user->update();
+                    }
                     UserCode::where('user_id', $user->id)->delete();
                     return $this->success($response, 'Success');
                 } else {
@@ -121,37 +140,27 @@ class AuthController extends Controller
 
     public function check(AuthNumberCheckRequest $authNumberCheckRequest): \Illuminate\Http\JsonResponse
     {
-        $temp_key = $authNumberCheckRequest->captcha['temp_key'];
-        $timeEnd = date('Y-m-d H:i:s', strtotime('- 5 minutes'));
+        if (User::where('login', $authNumberCheckRequest->login)->exists()) {
+            return $this->success_with_code(true, [], 'Raqam topildi', 602);
+        } else {
+            return $this->success_with_code(false, [], 'Raqam topilmadi', 603);
+
+        }
+    }
+
+    public function resend(ResendPasswordRequest $resendPasswordRequest): \Illuminate\Http\JsonResponse
+    {
+        $temp_key = $resendPasswordRequest->captcha['temp_key'];
         $captchaImageKey = CaptchaImageKey::where('temp_key', $temp_key)->first();
         if (!$captchaImageKey) {
             return $this->success_with_code(false, [], 'Captcha key topilmadi yoki vaqti tugagan', 600);
         } else {
             $captchaImage = $captchaImageKey->captcha_image;
-            if ($captchaImage->code != $authNumberCheckRequest->captcha['code']) {
+            if ($captchaImage->code != $resendPasswordRequest->captcha['code']) {
                 return $this->success_with_code(false, [], 'Captcha key noto`g`ri', 601);
             }
         }
         CaptchaImageKey::where('temp_key', $temp_key)->delete();
-        if (User::where('login', $authNumberCheckRequest->login)->exists()) {
-            $finUser = User::where('login', $authNumberCheckRequest->login)->first();
-            $password = GeneratePasswordService::generateUserPassword();
-            $finUser->password = bcrypt($password);
-            SendPasswordToUserService::sendPasswordToUser($password, $finUser->login, $finUser->id);
-            $finUser->update();
-            return $this->success_with_code(true, [], 'Sms jo`natildi', 602);
-        } else {
-            return $this->success_with_code(false, [], 'Raqam topilmadi', 603);
-
-        }
-//        $response['result'] = array(
-//            'code' => User::where('login', $authNumberCheckRequest->login)->exists() ? 200 : 404
-//        );
-//        return $this->success($response, 'Success');
-    }
-
-    public function resend(ResendPasswordRequest $resendPasswordRequest): \Illuminate\Http\JsonResponse
-    {
         $tmpUser = User::where('login', $resendPasswordRequest->login)->first();
         $lastCode = UserCode::orderBy('id', 'DESC')->where('user_id', $tmpUser->id)->first();
         $limited = '';
@@ -170,5 +179,30 @@ class AuthController extends Controller
         } else {
             return $this->error('Srogi otmagan', 422);
         }
+    }
+
+    public function send_sms_code(SendSmsCodeRequest $request)
+    {
+        $temp_key = $request->captcha['temp_key'];
+        $captchaImageKey = CaptchaImageKey::where('temp_key', $temp_key)->first();
+        if (!$captchaImageKey) {
+            return $this->success_with_code(false, [], 'Captcha key topilmadi yoki vaqti tugagan', 600);
+        } else {
+            $captchaImage = $captchaImageKey->captcha_image;
+            if ($captchaImage->code != $request->captcha['code']) {
+                return $this->success_with_code(false, [], 'Captcha key noto`g`ri', 601);
+            }
+        }
+        CaptchaImageKey::where('temp_key', $temp_key)->delete();
+        $attr = $request->all();
+        $password = GeneratePasswordService::generateUserPassword();
+        $user = User::where('login' , $request->login)->first();
+        $user->password = Hash::make($password);
+        $user->update();
+        SendPasswordToUserService::sendPasswordToUser($password, $request->login, $user->id);
+        $response['result'] = array(
+            'sended' => true
+        );
+        return $this->success($response, 'Success');
     }
 }

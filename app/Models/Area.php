@@ -14,7 +14,6 @@ class Area extends Model
     public $tableName = 'areas';
 
     protected $guarded = [];
-    protected $hidden = ['name'];
     public $timestamps = false;
 
     public function translates(): \Illuminate\Database\Eloquent\Relations\HasMany

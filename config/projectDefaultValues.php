@@ -189,8 +189,6 @@ return [
             ]
         ]
     ],
-
-    
     'areas' => array(
         array("id" => "1", "name" => ["uz" => "Mo'ynoq tumani", "ru" => "Mo'ynoq tumani"], "region_id" => "1"),
         array("id" => "2", "name" => ["uz" => "Kegeyli tumani", "ru" => "Kegeyli tumani"], "region_id" => "1"),
@@ -397,5 +395,33 @@ return [
         array("id" => "780", "name" => ["uz" => "Nurafshon shahri", "ru" => "Nurafshon shahri"], "region_id" => "13"),
         array("id" => "781", "name" => ["uz" => "Yangihayot tumani", "ru" => "Yangihayot tumani"], "region_id" => "14"),
         array("id" => "782", "name" => ["uz" => "Yashnabod tumani", "ru" => "Yashnabod tumani"], "region_id" => "14"),
-    )
+    ),
+    'currencies' => [
+        [
+            'name' => 'So`m',
+            'key' => 'sum'
+        ],
+        [
+            'name' => 'Dollar',
+            'key' => 'dollar'
+        ]
+    ],
+    'product_statuses' => [
+        [
+            'id' => 0,
+            'name' => 'Yangi yaratilgan faol emas (ojidaniya)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'Faol'
+        ],
+        [
+            'id' => 2,
+            'name' => 'Qaytarilgan'
+        ],
+        [
+            'id' => 3,
+            'name' => 'Arxiv'
+        ]
+    ]
 ];

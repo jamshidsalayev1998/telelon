@@ -17,6 +17,7 @@ class Category extends Model
     use ModelScopeTrait;
 
     public $tableName = 'categories';
+    protected $guarded = [];
 
     public static function boot()
     {

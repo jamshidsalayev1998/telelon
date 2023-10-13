@@ -10,10 +10,8 @@ class PaginationService
         if (is_numeric($showCount) && $showCount > 0) $resultShowCount = $showCount; else{
             $resultShowCount = count($eloquent->get());
         }
-        $paginationResult =$eloquent->paginate($resultShowCount)->toArray();
-        $result['result'] = $paginationResult['data'];
-        $result['all_count'] = $paginationResult['total'];
-        return $result;
+        $paginationResult =$eloquent->paginate($resultShowCount);
+        return $paginationResult;
 
     }
 }

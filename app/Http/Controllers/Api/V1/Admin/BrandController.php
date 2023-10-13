@@ -24,9 +24,10 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $resultH = BrandService::indexBrands($request);
-        $resourceResult = BrandResource::collection($resultH['result']);
-        $result['result'] = $resourceResult;
-        return $this->success($result, 'Success', 200);
+        $resourceResult = BrandResource::collection($resultH->items());
+        $resultData['result'] = $resourceResult;
+        $resultData['all_count'] = $resultH->total();
+        return $this->success($resultData, 'Success', 200);
     }
 
     /**

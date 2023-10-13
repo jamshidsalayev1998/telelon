@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\File;
 
 class CategoryService
 {
-    public static function indexCategories($request): array
+    public static function indexCategories($request)
     {
         $departmentEloquent = Category::notDeleted()
             ->with('translates:id,model_id,language,value,field_name')
+            ->with('translate:id,model_id,language,value,field_name')
             ->filter($request->filters)->order($request->desc);
         return PaginationService::makePagination($departmentEloquent, $request->limit);
     }

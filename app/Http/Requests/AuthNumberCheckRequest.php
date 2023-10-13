@@ -29,9 +29,9 @@ class AuthNumberCheckRequest extends FormRequest
     {
         return [
             'login' => ['required', 'max:9', 'min:9'],
-            'captcha' => ['array', 'required'],
-            'captcha.code' => ['required', 'string'],
-            'captcha.temp_key' => ['required', 'string']
+//            'captcha' => ['array', 'required'],
+//            'captcha.code' => ['required', 'string'],
+//            'captcha.temp_key' => ['required', 'string']
         ];
     }
 

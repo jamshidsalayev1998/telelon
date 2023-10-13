@@ -24,10 +24,10 @@ class ModelProductController extends Controller
     public function index(Request $request)
     {
         $result = ModelProductService::indexModelProduct($request);
-//        return $result;
-        $resourceResult = ModelProductResource::collection($result['result']);
-        $result['result'] = $resourceResult;
-        return $this->success($result, 'Success', 200);
+        $resourceResult = ModelProductResource::collection($result->items());
+        $resultData['result'] = $resourceResult;
+        $resultData['all_count'] = $result->total();
+        return $this->success($resultData, 'Success', 200);
     }
 
     /**

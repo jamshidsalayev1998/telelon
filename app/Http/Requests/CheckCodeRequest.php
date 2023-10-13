@@ -5,10 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * @property mixed $login
- */
-class ResendPasswordRequest extends FormRequest
+class CheckCodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,10 +25,8 @@ class ResendPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'login' => ['required' , 'max:9' , 'min:9' , Rule::exists('users' , 'login')],
-            'captcha' => ['array', 'required'],
-            'captcha.code' => ['required', 'string'],
-            'captcha.temp_key' => ['required', 'string']
+            'login' => ['required' , Rule::exists('users' , 'login')],
+            'code' => ['required' , Rule::exists('user_codes' , 'code')]
         ];
     }
 }

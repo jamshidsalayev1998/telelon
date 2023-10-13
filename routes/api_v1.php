@@ -11,6 +11,12 @@ use App\Http\Controllers\Api\V1\Admin\AttributeTemporaryValueController;
 use App\Http\Controllers\Api\V1\Auth\CaptchaImageController;
 use App\Http\Controllers\Api\V1\General\RegionController;
 use App\Http\Controllers\Api\V1\General\AreaController;
+use App\Http\Controllers\Api\V1\SimpleUser\Product\ProductController;
+use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserCategoryController;
+use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserBrandController;
+use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserModelProductController;
+use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserRegionController;
+use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserAreaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,13 +32,12 @@ use App\Http\Controllers\Api\V1\General\AreaController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/auth/check', [AuthController::class, 'check']);
-Route::post('/auth/register', [AuthController::class, 'register']);
+
+
 Route::group(['prefix' => 'admin'], function () {
     Route::post('auth/login', [AuthController::class, 'loginAdmin']);
 });
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/resend', [AuthController::class, 'resend']);
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -64,13 +69,33 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/model/{model_product}', [ModelProductController::class, 'update']);
         Route::delete('/model/{model_product}', [ModelProductController::class, 'destroy']);
     });
+    Route::group(['prefix' => 'simple-user'], function () {
+        Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::group(['prefix' => 'product'], function () {
+            Route::get('/', [ProductController::class, 'index'])->middleware('permission:product-index');
+            Route::post('/', [ProductController::class, 'store'])->middleware('permission:product-store');
+        });
+    });
 
 
 });
 //simple user routes
-Route::get('/get-captcha', [CaptchaImageController::class, 'get_captcha']);
-Route::get('/category', [CategoryController::class, 'index']);
-Route::get('/brand', [BrandController::class, 'index']);
-Route::get('/regions' , [RegionController::class,'index']);
-Route::get('/areas' , [AreaController::class,'index']);
+
+Route::group(['prefix' => 'simple-user'], function () {
+    Route::post('/auth/check', [AuthController::class, 'check']);
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/send-sms-code', [AuthController::class, 'send_sms_code']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/resend', [AuthController::class, 'resend']);
+
+
+    Route::get('/get-captcha', [CaptchaImageController::class, 'get_captcha']);
+    Route::get('/category', [SimpleUserCategoryController::class, 'index']);
+    Route::get('/brand', [SimpleUserBrandController::class, 'index']);
+    Route::get('/model', [SimpleUserModelProductController::class, 'index']);
+    Route::get('/model/{model_product}', [SimpleUserModelProductController::class, 'show']);
+    Route::get('/regions', [SimpleUserRegionController::class, 'index']);
+    Route::get('/areas', [SimpleUserAreaController::class, 'index']);
+});
 

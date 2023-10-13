@@ -28,8 +28,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required' , 'min:3' , 'max:60'],
-            'login' => ['required' , Rule::unique('users' , 'login')]
+            'name' => ['required', 'min:3', 'max:60'],
+            'login' => ['required', Rule::unique('users', 'login')],
+            'captcha' => ['array', 'required'],
+            'captcha.code' => ['required', 'string'],
+            'captcha.temp_key' => ['required', 'string']
         ];
     }
 }
