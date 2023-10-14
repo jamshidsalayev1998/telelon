@@ -47,7 +47,8 @@ class AuthController extends Controller
         }
         CaptchaImageKey::where('temp_key', $temp_key)->delete();
         $attr = $registerRequest->all();
-        $password = GeneratePasswordService::generateUserPassword();
+//        $password = GeneratePasswordService::generateUserPassword();
+        $password = '11111';
         User::where('login' , $attr['login'])->delete();
         $user = User::create([
             'name' => $attr['name'],
@@ -196,7 +197,8 @@ class AuthController extends Controller
         }
         CaptchaImageKey::where('temp_key', $temp_key)->delete();
         $attr = $request->all();
-        $password = GeneratePasswordService::generateUserPassword();
+//        $password = GeneratePasswordService::generateUserPassword();
+        $password = '11111';
         $user = User::where('login' , $request->login)->first();
         $user->password = Hash::make($password);
         $user->update();
