@@ -105,7 +105,7 @@ class AuthController extends Controller
         $response['result'] = array(
             'token' => 'Togri kelmadi'
         );
-        return $this->error($message, 401);
+        return $this->error($message, 200);
 
     }
 
