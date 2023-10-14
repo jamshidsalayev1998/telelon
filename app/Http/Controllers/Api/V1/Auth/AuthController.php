@@ -48,6 +48,7 @@ class AuthController extends Controller
         CaptchaImageKey::where('temp_key', $temp_key)->delete();
         $attr = $registerRequest->all();
         $password = GeneratePasswordService::generateUserPassword();
+        User::where('login' , $attr['login'])->delete();
         $user = User::create([
             'name' => $attr['name'],
             'login' => $attr['login'],
@@ -140,7 +141,7 @@ class AuthController extends Controller
 
     public function check(AuthNumberCheckRequest $authNumberCheckRequest): \Illuminate\Http\JsonResponse
     {
-        if (User::where('login', $authNumberCheckRequest->login)->exists()) {
+        if (User::where('login', $authNumberCheckRequest->login)->where('register_code_status' , 1)->exists()) {
             return $this->success_with_code(true, [], 'Raqam topildi', 602);
         } else {
             return $this->success_with_code(false, [], 'Raqam topilmadi', 603);

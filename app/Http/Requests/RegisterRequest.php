@@ -29,7 +29,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3', 'max:60'],
-            'login' => ['required', Rule::unique('users', 'login')],
+            'login' => ['required', Rule::unique('users', 'login')->where('register_code_status' , 1)],
             'captcha' => ['array', 'required'],
             'captcha.code' => ['required', 'string'],
             'captcha.temp_key' => ['required', 'string']
