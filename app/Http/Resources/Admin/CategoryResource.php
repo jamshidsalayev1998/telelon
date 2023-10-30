@@ -20,7 +20,7 @@ class CategoryResource extends JsonResource
         $result = [
             'id' => $this['id'],
             'slug' => $this['slug'],
-            'image' => $this['image'],
+            'image' => config('file_system_assets.category_images').'/'.$this['image'],
             'status' => $this['status'],
         ];
         if (key_exists('relations', $dataRequest)) {

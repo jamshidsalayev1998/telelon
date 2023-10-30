@@ -18,7 +18,7 @@ class BrandResource extends JsonResource
         $result = [
             'id' => $this['id'],
             'slug' => $this['slug'],
-            'image' => $this['image'],
+            'image' => config('file_system_assets.brand_images').'/'.$this['image'],
             'status' => $this['status'],
             'name' => $this['name'],
         ];

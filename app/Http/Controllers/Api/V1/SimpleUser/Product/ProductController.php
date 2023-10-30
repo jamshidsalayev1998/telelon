@@ -21,7 +21,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request): \Illuminate\Http\JsonResponse
+    public function index(Request $request)
     {
         $resultH = SimpleUserProductService::indexProduct($request);
         $resourceResult = UserProductIndexResource::collection($resultH->items());
@@ -48,7 +48,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-//        return json_encode($request->attribute);
+//        return $request->images[0]['media_file_id'];
         $user = auth()->user();
         $newProduct = SimpleUserProductService::storeProduct($request);
         ProductImageService::storeProductImage($request->images,$newProduct->id,$user->id);
@@ -60,11 +60,23 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Product $product)
     {
-        //
+        $product->load(
+            'region.translate' ,
+            'area.translate' ,
+            'category.translate' ,
+            'product_status' ,
+            'product_attributes.attribute.translate' ,
+            'product_attributes.attribute_temporary_value.translate' ,
+            'model_product.translate');
+        $product->load('images.media_file');
+        $resourceResult = new UserProductIndexResource($product);
+        $result['result'] = $resourceResult;
+        return $this->success($result, 'Success', 200);
+
     }
 
     /**

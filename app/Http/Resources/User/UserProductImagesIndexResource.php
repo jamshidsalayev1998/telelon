@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources\User;
 
-use App\Models\Category;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SimpleUserCategoryResource extends JsonResource
+class UserProductImagesIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,14 +14,14 @@ class SimpleUserCategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        $result = [
+//        return $this->media_file;
+        return [
             'id' => $this->id,
-            'slug' => $this->slug,
-            'image' => config('file_system_assets.brand_images').'/'.$this->image,
-            'status' => $this->status,
-            'name' => $this->translate?$this->translate->value:null,
+            'is_main' => $this->is_main,
+            'media_file_id' => $this->media_file_id,
+            'url' => $this->media_file->url,
+            'type' => $this->media_file->type,
+//            'media_file' => $this->media_file,
         ];
-
-        return $result;
     }
 }

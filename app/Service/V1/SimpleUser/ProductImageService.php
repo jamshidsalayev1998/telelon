@@ -13,7 +13,7 @@ class ProductImageService{
             $newProductImage->is_main = $item['is_main'];
             $newProductImage->user_id = $userId;
             $newProductImage->product_id = $productId;
-            $newProductImage->url = FileSave::storeFile('product_images' , $item['file_image']);
+            $newProductImage->media_file_id = $item['media_file_id'];
             $newProductImage->save();
         }
     }

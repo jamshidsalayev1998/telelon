@@ -3,6 +3,7 @@
 namespace App\Http\Resources\User;
 
 use App\Http\Resources\Admin\BrandResource;
+use App\Http\Resources\User\ProductIndex\SimpleUserProductAttributeForIndexResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserProductIndexResource extends JsonResource
@@ -29,7 +30,9 @@ class UserProductIndexResource extends JsonResource
             'is_new' => $this->is_new,
             'region' => new SimpleUserRegionResource($this->region),
             'area' => new SimpleUserAreaResource($this->area),
-            'created_at' => $this->created_at
+            'images' => UserProductImagesIndexResource::collection($this->images),
+            'created_at' => $this->created_at,
+            'product_attributes' => SimpleUserProductAttributeForIndexResource::collection($this->product_attributes)
         ];
     }
 }

@@ -16,7 +16,10 @@ class SimpleUserProductService
             ->with('area.translate')
             ->with('category.translate')
             ->with('product_status')
+            ->with('product_attributes.attribute.translate')
+            ->with('product_attributes.attribute_temporary_value.translate')
             ->with('model_product.translate')
+            ->with('images.media_file')
             ->order($request->desc);
         return PaginationService::makePagination($brandEloquent, $request->limit);
     }

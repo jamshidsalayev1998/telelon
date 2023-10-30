@@ -5,16 +5,16 @@ namespace App\Http\Requests\SimpleUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreProductRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+         return [
             'model_product_id' => ['required', Rule::exists('model_products', 'id')->where('is_deleted', 0)],
             'price' => ['required','integer'],
             'box_doc' => ['required','integer', Rule::in([0, 1, 2])],
@@ -34,8 +34,8 @@ class StoreProductRequest extends FormRequest
             'area_id' => ['required' , Rule::exists('areas' , 'id')],
             'images' => ['required' , 'array' , 'min:1'],
             'images.*' => ['required' , 'array'],
-            'images.*.media_file_id' => ['required' , Rule::exists('media_files' , 'id')],
-            'images.*.is_main' => ['required' , Rule::in([1,0])],
+            'images.*.is_main' => ['required' , Rule::in([0,1])],
+            'images.*.file_image' => ['required' , 'file' , 'mimes:jpg,jpeg,png'],
             'attribute' => ['required' , 'array'],
             'attribute.*' => ['required' , 'array'],
             'attribute.*.attribute_id' => ['required' , Rule::exists('attributes' , 'id')->where('is_deleted' , 0)],

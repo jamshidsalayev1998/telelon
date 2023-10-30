@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserBrandController;
 use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserModelProductController;
 use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserRegionController;
 use App\Http\Controllers\Api\V1\SimpleUser\SimpleUserAreaController;
+use App\Http\Controllers\Api\V1\SimpleUser\MediaFile\MediaFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,7 +75,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::group(['prefix' => 'product'], function () {
             Route::get('/', [ProductController::class, 'index'])->middleware('permission:product-index');
+            Route::get('/{product}', [ProductController::class, 'show'])->middleware('permission:product-show');
+            Route::post('/{product}', [ProductController::class, 'update'])->middleware('permission:product-update');
             Route::post('/', [ProductController::class, 'store'])->middleware('permission:product-store');
+        });
+        Route::group(['prefix' => 'media-file'], function () {
+            Route::post('/product-image' , [MediaFileController::class,'store_product_image']);
         });
     });
 

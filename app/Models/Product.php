@@ -54,4 +54,14 @@ class Product extends Model
     {
         return $this->belongsTo(ProductStatus::class , 'status' , 'id');
     }
+
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ProductImage::class,'product_id' , 'id');
+    }
+
+    public function product_attributes()
+    {
+        return $this->hasMany(ProductAttribute::class,'product_id' , 'id');
+    }
 }
