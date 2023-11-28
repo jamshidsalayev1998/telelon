@@ -48,7 +48,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-//        return $request->images[0]['media_file_id'];
+//        return $request->all();
         $user = auth()->user();
         $newProduct = SimpleUserProductService::storeProduct($request);
         ProductImageService::storeProductImage($request->images,$newProduct->id,$user->id);
