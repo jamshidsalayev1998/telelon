@@ -17,4 +17,17 @@ class ProductImageService{
             $newProductImage->save();
         }
     }
+
+    public static function updateProductImage($dataArray , $productId , $userId)
+    {
+        ProductImage::where('product_id' , $productId)->delete();
+        foreach ($dataArray as $item) {
+            $newProductImage = new ProductImage();
+            $newProductImage->is_main = $item['is_main'];
+            $newProductImage->user_id = $userId;
+            $newProductImage->product_id = $productId;
+            $newProductImage->media_file_id = $item['media_file_id'];
+            $newProductImage->save();
+        }
+    }
 }

@@ -44,4 +44,25 @@ class SimpleUserProductService
         $newProduct->save();
         return $newProduct;
     }
+
+    public static function updateProduct($request , $newProduct)
+    {
+        $user = auth()->user();
+        $area = Area::find($request->area_id);
+        $modelProduct = ModelProduct::find($request->model_product_id);
+        $newProduct->model_product_id = $request->model_product_id;
+        $newProduct->user_id = $user->id;
+        $newProduct->box_doc = $request->box_doc;
+        $newProduct->exchange = $request->exchange;
+        $newProduct->currency_key = $request->currency_key;
+        $newProduct->price = $request->price;
+        $newProduct->is_new = $request->is_new;
+        $newProduct->area_id = $request->area_id;
+        $newProduct->region_id = $area->region_id;
+        $newProduct->category_id = $modelProduct->category_id;
+        $newProduct->brand_id = $modelProduct->brand_id;
+        $newProduct->price = $request->price;
+        $newProduct->update();
+        return $newProduct;
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\SimpleUser\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SimpleUser\StoreProductRequest;
+use App\Http\Requests\SimpleUser\UpdateProductRequest;
 use App\Http\Resources\User\UserProductIndexResource;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -80,26 +81,17 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $user = auth()->user();
+        $product = SimpleUserProductService::updateProduct($request,$product);
+        ProductImageService::updateProductImage($request->images,$product->id,$user->id);
     }
 
     /**
