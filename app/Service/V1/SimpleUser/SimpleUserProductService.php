@@ -11,6 +11,7 @@ class SimpleUserProductService
 {
     public static function indexProduct($request)
     {
+        $user = auth()->user();
         $brandEloquent = Product::filter($request->filters)
             ->with('region.translate')
             ->with('area.translate')
@@ -20,6 +21,7 @@ class SimpleUserProductService
             ->with('product_attributes.attribute_temporary_value.translate')
             ->with('model_product.translate')
             ->with('images.media_file')
+            ->where('user_id' , $user->id)
             ->order($request->desc);
         return PaginationService::makePagination($brandEloquent, $request->limit);
     }

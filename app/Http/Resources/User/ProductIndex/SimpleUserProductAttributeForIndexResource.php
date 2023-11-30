@@ -17,6 +17,7 @@ class SimpleUserProductAttributeForIndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'value' => $this->value,
             'attribute' => new SimpleUserAttributeForIndexResource($this->attribute),
             'attribute_temporary_value' => new SimpleUserAttributeTemporaryValueResource($this->attribute_temporary_value)
         ];

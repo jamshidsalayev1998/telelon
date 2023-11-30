@@ -7,6 +7,7 @@ use App\Http\Requests\SimpleUser\StoreProductRequest;
 use App\Http\Requests\SimpleUser\UpdateProductRequest;
 use App\Http\Resources\User\UserProductIndexResource;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use App\Models\ProductImage;
 use App\Service\V1\SimpleUser\ProductAttributeService;
 use App\Service\V1\SimpleUser\ProductImageService;
@@ -85,23 +86,34 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
         $user = auth()->user();
         $product = SimpleUserProductService::updateProduct($request,$product);
         ProductImageService::updateProductImage($request->images,$product->id,$user->id);
+        ProductAttributeService::updateProductAttributes($request->attribute , $product->id);
+        return $this->success($product, 'Ma`lumot o`zgartirildi', 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $user = auth()->user();
+        if ($product->user_id == $user->id){
+            ProductAttribute::where('product_id' , $product->id)->delete();
+            ProductImage::where('product_id' , $product->id)->delete();
+            $product->delete();
+            return $this->success($product,'O`chirildi' , 200);
+        }
+        else{
+            return $this->error('Huquq yoq' , 403);
+        }
     }
 }

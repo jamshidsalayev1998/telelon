@@ -77,6 +77,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/', [ProductController::class, 'index'])->middleware('permission:product-index');
             Route::get('/{product}', [ProductController::class, 'show'])->middleware('permission:product-show');
             Route::post('/{product}', [ProductController::class, 'update'])->middleware('permission:product-update');
+            Route::delete('/{product}', [ProductController::class, 'destroy'])->middleware('permission:product-delete');
             Route::post('/', [ProductController::class, 'store'])->middleware('permission:product-store');
         });
         Route::group(['prefix' => 'media-file'], function () {
